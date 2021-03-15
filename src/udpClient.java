@@ -7,8 +7,10 @@ import java.io.InputStreamReader;
 
 public class udpClient
 {
+
     public static void main(String[] args) throws IOException
     {
+        final int ONESECONDINMILLISECONDS = 1000;
 
         DatagramSocket socketToTransmitData = new DatagramSocket();
 
@@ -25,20 +27,38 @@ public class udpClient
 
 
         byte[] messageToBeSent;
+        byte[] closingConnectionMessageToBeSent;
 
         while (true)
         {
-            String messageBeforeByteConversion = clientInput.nextLine();
+            try {
 
-            messageToBeSent = messageBeforeByteConversion.getBytes(); //Turning message into byte representation
+                int randomSecondsToSendNodeAvailibility = GenerateRandomNumberBetween1and30();
 
-            DatagramPacket DpSend =
-                    new DatagramPacket(messageToBeSent, messageToBeSent.length, myIp, 1234);
+                Thread.sleep(ONESECONDINMILLISECONDS * randomSecondsToSendNodeAvailibility);
 
-            socketToTransmitData.send(DpSend);
+                System.out.println("System now sending availibility..");
 
-            if (messageBeforeByteConversion.toLowerCase().equals("close connection")) {
-                break; //client can close connection
+                String messageBeforeByteConversion = "Availible";
+
+                messageToBeSent = messageBeforeByteConversion.getBytes();
+
+                DatagramPacket DpSend = new DatagramPacket(messageToBeSent, messageToBeSent.length, myIp, 1234);
+
+                socketToTransmitData.send(DpSend);
+
+                Thread.sleep(ONESECONDINMILLISECONDS * randomSecondsToSendNodeAvailibility);
+
+
+
+                if (messageBeforeByteConversion.toLowerCase().equals("close connection")) {
+                    break; //client can close connection
+                }
+
+
+
+            } catch(Exception ie) {
+
             }
 
         }
@@ -63,4 +83,16 @@ public class udpClient
         // System.out.println("Public IP Address: " + systemipaddress +"\n");
         return publicIpAddress;
     }
+
+    public static int GenerateRandomNumberBetween1and30()
+    {
+        int max = 30;
+        int min = 1;
+        int range = max - min + min;
+
+        int randomNumber = (int)(Math.random() * range) + min;
+        return randomNumber;
+    }
+
+
 }
