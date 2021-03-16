@@ -4,9 +4,12 @@ import java.net.*;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class udpClient
 {
+    private static int randomSecondsInMilliSecondsToWait;
 
     public static void main(String[] args) throws IOException
     {
@@ -14,7 +17,6 @@ public class udpClient
 
         DatagramSocket socketToTransmitData = new DatagramSocket();
 
-        Scanner clientInput = new Scanner(System.in);
 
         //My machines local ip
         //InetAddress ip = InetAddress.getLocalHost();
@@ -25,31 +27,59 @@ public class udpClient
 
         InetAddress myIp = InetAddress.getByName(GetPublicIp());
 
+        randomSecondsInMilliSecondsToWait = ONESECONDINMILLISECONDS;
 
-        byte[] messageToBeSent;
+        Timer t = new Timer();
+
+        final String messageBeforeByteConversion = "Availible";
+        final byte[] availbilityMessageToBeSent = messageBeforeByteConversion.getBytes();
+
+        t.schedule(
+                new TimerTask()
+                {
+                    public void run()
+                    {
+
+                        try {
+                            System.out.println("System now sending availibility..");
+
+
+                            DatagramPacket DpSend = new DatagramPacket(availbilityMessageToBeSent, availbilityMessageToBeSent.length, myIp, 1234);
+
+                            socketToTransmitData.send(DpSend);
+
+
+                            Thread.sleep(GenerateRandomNumberBetween1and30() * ONESECONDINMILLISECONDS);
+
+
+                        } catch(Exception ie) {
+
+                        }
+
+                    }
+                },
+                0,
+                randomSecondsInMilliSecondsToWait);
+
+
         byte[] closingConnectionMessageToBeSent;
+
+        Scanner input = new Scanner(System.in);
 
         while (true)
         {
             try {
 
-                int randomSecondsToSendNodeAvailibility = GenerateRandomNumberBetween1and30();
+                String messageToBeSent = input.nextLine();
 
-                Thread.sleep(ONESECONDINMILLISECONDS * randomSecondsToSendNodeAvailibility);
+                // If message is not empty then send it
+                if(messageToBeSent != "" || messageToBeSent != null) {
+                    closingConnectionMessageToBeSent = messageToBeSent.getBytes();
 
-                System.out.println("System now sending availibility..");
+                    DatagramPacket dataPacketMessage = new DatagramPacket(closingConnectionMessageToBeSent, closingConnectionMessageToBeSent.length, myIp, 1234);
 
-                String messageBeforeByteConversion = "Availible";
-
-                messageToBeSent = messageBeforeByteConversion.getBytes();
-
-                DatagramPacket DpSend = new DatagramPacket(messageToBeSent, messageToBeSent.length, myIp, 1234);
-
-                socketToTransmitData.send(DpSend);
-
-                Thread.sleep(ONESECONDINMILLISECONDS * randomSecondsToSendNodeAvailibility);
-
-
+                    socketToTransmitData.send(dataPacketMessage);
+                }
 
                 if (messageBeforeByteConversion.toLowerCase().equals("close connection")) {
                     break; //client can close connection
