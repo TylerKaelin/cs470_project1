@@ -14,51 +14,15 @@ import java.util.TimerTask;
 
 public class udpClient
 {
-    private static int randomSecondsInMilliSecondsToWait;
 
     public static void main(String[] args) throws IOException
     {
-        final int ONESECONDINMILLISECONDS = 1000;
-
         DatagramSocket socketToTransmitData = new DatagramSocket();
 
 
         InetAddress myIp = InetAddress.getByName(GetPublicIp());
 
-
-        randomSecondsInMilliSecondsToWait = ONESECONDINMILLISECONDS;
-
-        Timer t = new Timer();
-
-        final String messageBeforeByteConversion = myIp.toString();
-        final byte[] availbilityMessageToBeSent = messageBeforeByteConversion.getBytes();
-
-        t.schedule(
-                new TimerTask()
-                {
-                    public void run()
-                    {
-
-                        try {
-                            System.out.println("System now sending availibility..");
-
-
-                            DatagramPacket DpSend = new DatagramPacket(availbilityMessageToBeSent, availbilityMessageToBeSent.length, myIp, 1234);
-
-                            socketToTransmitData.send(DpSend);
-
-
-                            Thread.sleep(generateRandomNumberBetween1and30() * ONESECONDINMILLISECONDS);
-
-
-                        } catch(Exception ie) {
-
-                        }
-
-                    }
-                },
-                0,
-                randomSecondsInMilliSecondsToWait);
+        initiateAutomaticNodeAvailibility(myIp, socketToTransmitData); // Does heart beat
 
 
         byte[] closingConnectionMessageToBeSent;
@@ -126,6 +90,41 @@ public class udpClient
         return randomNumber;
     }
 
+    public static void initiateAutomaticNodeAvailibility(InetAddress myIp, DatagramSocket socketToTransmitData) {
 
+        final int ONESECONDINMILLISECONDS = 1000;
+        Timer t = new Timer();
+
+        final String messageBeforeByteConversion = myIp.toString();
+        final byte[] availbilityMessageToBeSent = messageBeforeByteConversion.getBytes();
+
+        t.schedule(
+                new TimerTask()
+                {
+                    public void run()
+                    {
+
+                        try {
+                            System.out.println("System now sending availibility..");
+
+
+                            DatagramPacket DpSend = new DatagramPacket(availbilityMessageToBeSent, availbilityMessageToBeSent.length, myIp, 1234);
+
+                            socketToTransmitData.send(DpSend);
+
+
+                            Thread.sleep(generateRandomNumberBetween1and30() * ONESECONDINMILLISECONDS);
+
+
+                        } catch(Exception ie) {
+
+                        }
+
+                    }
+                },
+                0,
+                ONESECONDINMILLISECONDS);
+
+    }
 
 }
