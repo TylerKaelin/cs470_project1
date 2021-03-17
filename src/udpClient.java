@@ -1,7 +1,5 @@
 //Tyler Kaelin and Logan Morris
 import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
 import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
