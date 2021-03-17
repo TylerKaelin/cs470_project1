@@ -1,6 +1,9 @@
 //Tyler Kaelin and Logan Morris
 import java.io.IOException;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.URL;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -49,7 +52,7 @@ public class udpClient
                             socketToTransmitData.send(DpSend);
 
 
-                            Thread.sleep(GenerateRandomNumberBetween1and30() * ONESECONDINMILLISECONDS);
+                            Thread.sleep(generateRandomNumberBetween1and30() * ONESECONDINMILLISECONDS);
 
 
                         } catch(Exception ie) {
@@ -117,7 +120,7 @@ public class udpClient
         return publicIpAddress;
     }
 
-    public static int GenerateRandomNumberBetween1and30()
+    public static int generateRandomNumberBetween1and30()
     {
         int max = 30;
         int min = 1;
@@ -125,6 +128,10 @@ public class udpClient
 
         int randomNumber = (int)(Math.random() * range) + min;
         return randomNumber;
+    }
+
+    public static void logNodesIpInConfigFile() {
+
     }
 
 
