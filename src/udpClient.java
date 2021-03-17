@@ -1,5 +1,7 @@
 //Tyler Kaelin and Logan Morris
 import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
 import java.net.InetAddress;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -21,20 +23,14 @@ public class udpClient
         DatagramSocket socketToTransmitData = new DatagramSocket();
 
 
-        //My machines local ip
-        //InetAddress ip = InetAddress.getLocalHost();
-        //InetAddress myIp = InetAddress.getByName();
-
-        //InetAddress logansIP = ip.getByName(myIP);
-
-
         InetAddress myIp = InetAddress.getByName(GetPublicIp());
+
 
         randomSecondsInMilliSecondsToWait = ONESECONDINMILLISECONDS;
 
         Timer t = new Timer();
 
-        final String messageBeforeByteConversion = "Availible";
+        final String messageBeforeByteConversion = myIp.toString();
         final byte[] availbilityMessageToBeSent = messageBeforeByteConversion.getBytes();
 
         t.schedule(
@@ -130,9 +126,6 @@ public class udpClient
         return randomNumber;
     }
 
-    public static void logNodesIpInConfigFile() {
-
-    }
 
 
 }
