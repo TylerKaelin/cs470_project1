@@ -145,11 +145,26 @@ public class udpServer
         int periodCount = 0;
         char[] currentNodeIpCharRepresentation = currentNodeIp.toCharArray();
         char eachCharacterInCurrentNodeIp;
+        String substringOfIp = "";
         for(int ipIndex = 0; ipIndex < currentNodeIp.length(); ipIndex++) {
             eachCharacterInCurrentNodeIp = currentNodeIpCharRepresentation[ipIndex];
 
-            if (Character.toString(eachCharacterInCurrentNodeIp).equals(".")) {
-                periodCount++;
+            if (Character.toString(eachCharacterInCurrentNodeIp).equals("/")) {
+                substringOfIp = currentNodeIp.substring(ipIndex);
+                break;
+            }
+        }
+
+        if (substringOfIp.equals("")) {
+            System.out.println("Invalid Ip");
+            return false;
+        } else {
+            for(int secondIpIndex = 0; secondIpIndex < substringOfIp.length(); secondIpIndex++) {
+                eachCharacterInCurrentNodeIp = substringOfIp.charAt(secondIpIndex);
+
+                if(Character.toString(eachCharacterInCurrentNodeIp).equals(".")) {
+                    periodCount++;
+                }
             }
         }
 
