@@ -232,8 +232,9 @@ public class udpServer
                             System.out.println("System sending all availible nodes..");
 
                             String[] allIps = getAllIpsInIpConfig().clone();
+                            System.out.println("Length of all ips: " + allIps.length);
                             for(int indexForEachIp = 0; indexForEachIp < allIps.length; indexForEachIp++) {
-                                Thread t1 = new Thread(new udpServerNoteAvailibility(allIps[indexForEachIp], Arrays.toString(allIps)));
+                                Thread t1 = new Thread(new udpServerNoteAvailibility(allIps[indexForEachIp], Arrays.toString(allIps), socketToTransmitData));
                                 t1.run();
                             }
 
