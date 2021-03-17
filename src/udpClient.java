@@ -72,8 +72,9 @@ public class udpClient
 
                 String messageToBeSent = input.nextLine();
 
+
                 // If message is not empty then send it
-                if(messageToBeSent != "" || messageToBeSent != null) {
+                if(!messageToBeSent.equals("")) {
                     closingConnectionMessageToBeSent = messageToBeSent.getBytes();
 
                     DatagramPacket dataPacketMessage = new DatagramPacket(closingConnectionMessageToBeSent, closingConnectionMessageToBeSent.length, myIp, 1234);
@@ -81,8 +82,10 @@ public class udpClient
                     socketToTransmitData.send(dataPacketMessage);
                 }
 
-                if (messageBeforeByteConversion.toLowerCase().equals("close connection")) {
-                    break; //client can close connection
+
+                if (messageToBeSent.toLowerCase().equals("close")) {
+                    System.exit(0);
+                    //client can close connection
                 }
 
 

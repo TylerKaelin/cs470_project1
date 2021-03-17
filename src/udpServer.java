@@ -21,10 +21,10 @@ public class udpServer
 
             System.out.println("Client: " + convertByteMessageToString(byteRepresentationOfMessage));
 
-            if (convertByteMessageToString(byteRepresentationOfMessage).toString().toLowerCase().equals("close connection"))
+            if (convertByteMessageToString(byteRepresentationOfMessage).toString().toLowerCase().equals("close"))
             {
                 System.out.println("Client has closed the connection. Closing Connection.");
-                break;
+                System.exit(0);
             }
 
             byteRepresentationOfMessage = new byte[65535];
