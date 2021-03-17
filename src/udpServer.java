@@ -4,7 +4,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class udpServer
 {
@@ -17,6 +21,9 @@ public class udpServer
         String stringRepresentationOfEachMessage;
         DatagramPacket packetToRecieve;
         createIpConfigFile();
+
+//        String[] allIps = getAllIpsInIpConfig().clone();
+        initiateAllNodeAvailibility(socketToTransmitData);
 
 
         while (true)
@@ -111,14 +118,17 @@ public class udpServer
                 String eachIpInConfigFile = myReader.nextLine();
 
                 if(eachIpInConfigFile.equals(currentNodeIp)) {
-                    System.out.println("The Ip is already in the config file");
+                    //ip in config file
                     ipIsInConfig = true;
                     break;
                 }
 
-                // The Ip was not in the config file
-                System.out.println("The Ip was not in the config file");
+            }
 
+            if(ipIsInConfig) {
+                System.out.println("The Ip is already in the config file");
+            } else {
+                System.out.println("The Ip was not in the config file");
             }
 
             myReader.close();
@@ -151,4 +161,77 @@ public class udpServer
         System.out.println("Non valid Ip");
         return false;
     }
+
+    public static String[] getAllIpsInIpConfig() {
+        String[] allAvailibleIps = {}; //Assumes their will be no more than 100 nodes/clients, but can change to arraylist to fix
+
+        try {
+            File IpConfigFile = new File("IpConfigFile.txt");
+            Scanner myReader = new Scanner(IpConfigFile);
+
+            int ipIndex = 0;
+            int lineCount = 0;
+
+            while (myReader.hasNextLine()) {
+                myReader.nextLine();
+                lineCount++;
+            }
+
+            myReader.close();
+            allAvailibleIps = new String[lineCount];
+
+            Scanner newReader = new Scanner(IpConfigFile);
+
+            // System.out.println("Line count: " + lineCount);
+
+
+            // Reading each IP address
+            while (newReader.hasNextLine()) {
+                String eachIpInConfigFile = newReader.nextLine();
+                allAvailibleIps[ipIndex] = eachIpInConfigFile;
+                ipIndex++;
+            }
+
+            newReader.close();
+            return allAvailibleIps;
+        } catch (Exception e) {
+            System.out.println("An error occurred. The could not get all Ips in the config file.");
+            e.printStackTrace();
+            return allAvailibleIps;
+        }
+    }
+
+    public static void initiateAllNodeAvailibility(DatagramSocket socketToTransmitData) {
+
+
+        final int TWENTYFIVESECONDSINMILLISECONDS = 25000;
+        Timer t = new Timer();
+
+        t.schedule(
+                new TimerTask()
+                {
+                    public void run()
+                    {
+
+                        try {
+                            System.out.println("System sending all availible nodes..");
+
+                            String[] allIps = getAllIpsInIpConfig().clone();
+                            for(int indexForEachIp = 0; indexForEachIp < allIps.length; indexForEachIp++) {
+                                Thread t1 = new Thread(new udpServerNoteAvailibility(allIps[indexForEachIp], Arrays.toString(allIps)));
+                                t1.run();
+                            }
+
+
+                        } catch(Exception ie) {
+
+                        }
+
+                    }
+                },
+                TWENTYFIVESECONDSINMILLISECONDS,
+                TWENTYFIVESECONDSINMILLISECONDS);
+
+    }
+
 }

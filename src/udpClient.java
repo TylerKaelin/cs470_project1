@@ -18,7 +18,28 @@ public class udpClient
         DatagramSocket socketToTransmitData = new DatagramSocket();
 
 
-        InetAddress myIp = InetAddress.getByName(GetPublicIp());
+        Scanner networkInput = new Scanner(System.in);
+        System.out.println("Please enter \"truman\" or \"local\" for network type: ");
+        String userNetworkInput = networkInput.nextLine();
+
+        while(!userNetworkInput.toLowerCase().equals("local") && !userNetworkInput.toLowerCase().equals("truman"))
+        {
+            System.out.println("Please enter \"truman\" or \"local\" for network type: ");
+            userNetworkInput = networkInput.nextLine();
+        }
+
+        InetAddress myIp;
+        if(userNetworkInput.equals("truman")) {
+            myIp = InetAddress.getByName(GetPublicIp());
+        } else {
+            myIp = InetAddress.getLocalHost();
+        }
+
+
+
+        System.out.println("Current Machines Ip: " + myIp);
+
+
 
         initiateAutomaticNodeAvailibility(myIp, socketToTransmitData); // Does heart beat
 
