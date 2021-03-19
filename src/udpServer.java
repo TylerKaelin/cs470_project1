@@ -148,9 +148,10 @@ public class udpServer
         String substringOfIp = "";
         for(int ipIndex = 0; ipIndex < currentNodeIp.length(); ipIndex++) {
             eachCharacterInCurrentNodeIp = currentNodeIpCharRepresentation[ipIndex];
-
+            System.out.println("Each character in ip: " + eachCharacterInCurrentNodeIp);
             if (Character.toString(eachCharacterInCurrentNodeIp).equals("/")) {
                 substringOfIp = currentNodeIp.substring(ipIndex);
+
                 break;
             }
         }

@@ -27,23 +27,25 @@ public class udpClient
             userNetworkInput = networkInput.nextLine();
         }
 
-        InetAddress myIp;
+        InetAddress serverIp;
         if(userNetworkInput.equals("truman")) {
-            myIp = InetAddress.getByName(GetPublicIp());
+                //myIp = InetAddress.getByName(GetPublicIp());
+            serverIp = InetAddress.getByName("150.243.227.218"); //This is the manual server ip
+
         } else {
-            myIp = InetAddress.getLocalHost();
+            serverIp = InetAddress.getLocalHost();
         }
 
 
-        System.out.println("Current Machines Ip: " + myIp);
+        System.out.println("Current Server Ip: " + serverIp);
 
         if(!isNetworkTypeInFile(userNetworkInput)) {
             logNetworkTypeInFile(userNetworkInput);
         }
 
+        InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
 
-
-        initiateAutomaticNodeAvailibility(myIp, socketToTransmitData); // Does heart beat
+        initiateAutomaticNodeAvailibility(serverIp, socketToTransmitData, nodeSpecificIp); // Does heart beat
         initiateUdpServerPackageCheck();
 
 
@@ -62,7 +64,7 @@ public class udpClient
                 if(!messageToBeSent.equals("")) {
                     closingConnectionMessageToBeSent = messageToBeSent.getBytes();
 
-                    DatagramPacket dataPacketMessage = new DatagramPacket(closingConnectionMessageToBeSent, closingConnectionMessageToBeSent.length, myIp, 1234);
+                    DatagramPacket dataPacketMessage = new DatagramPacket(closingConnectionMessageToBeSent, closingConnectionMessageToBeSent.length, serverIp, 1234);
 
                     socketToTransmitData.send(dataPacketMessage);
                 }
@@ -111,12 +113,13 @@ public class udpClient
         return randomNumber;
     }
 
-    public static void initiateAutomaticNodeAvailibility(InetAddress myIp, DatagramSocket socketToTransmitData) {
+    public static void initiateAutomaticNodeAvailibility(InetAddress myIp, DatagramSocket socketToTransmitData, InetAddress tylersIp) {
 
         final int ONESECONDINMILLISECONDS = 1000;
         Timer t = new Timer();
 
-        final String messageBeforeByteConversion = myIp.toString();
+        //final String messageBeforeByteConversion = myIp.toString();
+        final String messageBeforeByteConversion = tylersIp.toString();
         final byte[] availbilityMessageToBeSent = messageBeforeByteConversion.getBytes();
 
         t.schedule(

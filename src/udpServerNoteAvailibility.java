@@ -42,7 +42,8 @@ public class udpServerNoteAvailibility implements Runnable {
 
             InetAddress myIp;
             if(whatIsNetworkType().equals("truman")) {
-                myIp = InetAddress.getByName(GetPublicIp());
+                myIp = InetAddress.getByName(getIpAddress().substring(1));
+                System.out.println("the substring of supposed ip" + getIpAddress().substring(1));
             } else {
                 myIp = InetAddress.getLocalHost();
             }
