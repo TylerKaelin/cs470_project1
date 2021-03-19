@@ -30,20 +30,20 @@ public class udpClient
         InetAddress serverIp;
         if(userNetworkInput.equals("truman")) {
                 //myIp = InetAddress.getByName(GetPublicIp());
-            serverIp = InetAddress.getByName("150.243.227.218"); //This is the manual server ip
-
+//            serverIp = InetAddress.getByName("150.243.227.218"); //This is the manual server ip
+            serverIp = InetAddress.getByName("150.243.227.221");
         } else {
             serverIp = InetAddress.getLocalHost();
         }
 
-
-        System.out.println("Current Server Ip: " + serverIp);
 
         if(!isNetworkTypeInFile(userNetworkInput)) {
             logNetworkTypeInFile(userNetworkInput);
         }
 
         InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
+
+        System.out.println("My node Ip: " + nodeSpecificIp);
 
         initiateAutomaticNodeAvailibility(serverIp, socketToTransmitData, nodeSpecificIp); // Does heart beat
         initiateUdpServerPackageCheck();
