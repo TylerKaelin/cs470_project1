@@ -21,11 +21,29 @@ public class udpServer
         DatagramPacket packetToRecieve;
         createIpConfigFile();
 
+
+        //isModeTypeInFile(String currentModeType)
+        Scanner modeDoneInput = new Scanner(System.in);
+        System.out.println("Has the mode type been entered in the client? Please enter yes or no. If not start the client.");
+        String modeInputString = modeDoneInput.nextLine();
+
+        while(!modeInputString.toLowerCase().equals("yes")) {
+            System.out.println("Please enter the mode input on the client first then come back and type \"yes\" when you have.");
+            modeInputString = modeDoneInput.nextLine();
+        }
+
+        //if in client server mode then the server will send all nodes availibility
+        if(isModeTypeInFile("client server")) {
+            initiateAllNodeAvailibility(socketToTransmitData);
+        }
+
 //        String[] allIps = getAllIpsInIpConfig().clone();
-        initiateAllNodeAvailibility(socketToTransmitData);
+        //initiateAllNodeAvailibility(socketToTransmitData);
 
         InetAddress serverIp = InetAddress.getByName(GetPublicIp());
-        System.out.println("Servers Ip: " + serverIp);
+        System.out.println("Connect to Servers Ip (do not add the \"/\"): " + serverIp);
+
+//        initiateAllNodeAvailibility(socketToTransmitData);
 
 
         while (true)
@@ -236,6 +254,40 @@ public class udpServer
         }
 
         return publicIpAddress;
+    }
+
+    public static boolean isModeTypeInFile(String currentModeType) {
+        try {
+            File modeConfig = new File("mode.txt");
+            Scanner myReader = new Scanner(modeConfig);
+            boolean isModeTypeInConfig = false;
+
+            // While reading each IP address
+            while (myReader.hasNextLine()) {
+                String eachModeType = myReader.nextLine();
+
+                if(eachModeType.equals(currentModeType)) {
+                    //mode in config file
+                    isModeTypeInConfig = true;
+                    break;
+                }
+
+            }
+
+            if(isModeTypeInConfig) {
+                System.out.println("The Mode Type is already in the config file");
+            } else {
+                System.out.println("The Mode Type was not in the config file");
+            }
+
+            myReader.close();
+            return isModeTypeInConfig;
+        } catch (Exception e) {
+            System.out.println("An error occurred. The Ip existence in config file was not checked.");
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     public static void initiateAllNodeAvailibility(DatagramSocket socketToTransmitData) {

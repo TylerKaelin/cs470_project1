@@ -15,6 +15,23 @@ public class udpClient
     {
         DatagramSocket socketToTransmitData = new DatagramSocket();
         createNetworkTypeFile();
+        createModeFile();
+
+        System.out.println("MAKE SURE YOU HAVE STARTED THE SERVER FIRST!!");
+
+        Scanner modeInput = new Scanner(System.in);
+        System.out.println("Please enter the mode type as either \"peer to peer\" or \"client server\": ");
+        String modeTypeStringRepresentation = modeInput.nextLine();
+
+        while(!modeTypeStringRepresentation.toLowerCase().equals("peer to peer") && !modeTypeStringRepresentation.toLowerCase().equals("client server"))
+        {
+            System.out.println("Please enter the mode type as either \"peer to peer\" or \"client server\": ");
+            modeTypeStringRepresentation = modeInput.nextLine();
+        }
+
+        if(!isModeTypeInFile(modeTypeStringRepresentation)) {
+            logModeTypeInFile(modeTypeStringRepresentation);
+        }
 
 
         Scanner networkInput = new Scanner(System.in);
@@ -27,8 +44,12 @@ public class udpClient
             userNetworkInput = networkInput.nextLine();
         }
 
+        if(!isNetworkTypeInFile(userNetworkInput)) {
+            logNetworkTypeInFile(userNetworkInput);
+        }
+
         Scanner serverIpInput = new Scanner(System.in);
-        System.out.println("Please enter the servers ip address: ");
+        System.out.println("To get the servers Ip to connect to you must tell the server \"yes\" you have input in the mode type. Please enter the servers ip address: ");
         String serverIpStringRepresentation = serverIpInput.nextLine();
 
 
@@ -42,14 +63,28 @@ public class udpClient
             serverIp = InetAddress.getLocalHost();
         }
 
+//        Scanner modeInput = new Scanner(System.in);
+//        System.out.println("Please enter the mode type as either \"peer to peer\" or \"client server\": ");
+//        String modeTypeStringRepresentation = modeInput.nextLine();
+//
+//        while(!modeTypeStringRepresentation.toLowerCase().equals("peer to peer") && !modeTypeStringRepresentation.toLowerCase().equals("client server"))
+//        {
+//            System.out.println("Please enter the mode type as either \"peer to peer\" or \"client server\": ");
+//            modeTypeStringRepresentation = modeInput.nextLine();
+//        }
 
-        System.out.println("Current Server Ip: " + serverIp);
 
-        if(!isNetworkTypeInFile(userNetworkInput)) {
-            logNetworkTypeInFile(userNetworkInput);
-        }
+//        if(!isNetworkTypeInFile(userNetworkInput)) {
+//            logNetworkTypeInFile(userNetworkInput);
+//        }
+
+//        if(!isModeTypeInFile(modeTypeStringRepresentation)) {
+//            logModeTypeInFile(modeTypeStringRepresentation);
+//        }
 
         InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
+
+        System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
 
         initiateAutomaticNodeAvailibility(serverIp, socketToTransmitData, nodeSpecificIp); // Does heart beat
         initiateUdpServerPackageCheck();
@@ -275,6 +310,21 @@ public class udpClient
 
     }
 
+    public static void createModeFile() {
+        try {
+            File modeConfig = new File("mode.txt");
+            if (modeConfig.createNewFile()) {
+                System.out.println("File created: " + modeConfig.getName());
+            } else {
+                System.out.println("Mode config file already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred in creating the mode type file.");
+            e.printStackTrace();
+        }
+
+    }
+
     public static boolean isNetworkTypeInFile(String currentNetworkType) {
         try {
             File NetworkTypeConfig = new File("networkType.txt");
@@ -286,7 +336,7 @@ public class udpClient
                 String eachNetworkType = myReader.nextLine();
 
                 if(eachNetworkType.equals(currentNetworkType)) {
-                    //ip in config file
+                    //network type in config file
                     isNetworkTypeInConfig = true;
                     break;
                 }
@@ -309,15 +359,62 @@ public class udpClient
 
     }
 
+    public static boolean isModeTypeInFile(String currentModeType) {
+        try {
+            File modeConfig = new File("mode.txt");
+            Scanner myReader = new Scanner(modeConfig);
+            boolean isModeTypeInConfig = false;
+
+            // While reading each IP address
+            while (myReader.hasNextLine()) {
+                String eachModeType = myReader.nextLine();
+
+                if(eachModeType.equals(currentModeType)) {
+                    //mode in config file
+                    isModeTypeInConfig = true;
+                    break;
+                }
+
+            }
+
+            if(isModeTypeInConfig) {
+                System.out.println("The Mode Type is already in the config file");
+            } else {
+                System.out.println("The Mode Type was not in the config file");
+            }
+
+            myReader.close();
+            return isModeTypeInConfig;
+        } catch (Exception e) {
+            System.out.println("An error occurred. The Ip existence in config file was not checked.");
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     public static void logNetworkTypeInFile(String networkType) {
         try {
-            FileWriter IpConfigFile = new FileWriter("networkType.txt");
-            IpConfigFile.write(networkType);
-            IpConfigFile.write("\n");
-            IpConfigFile.close();
-            System.out.println("Successfully wrote to the file.");
+            FileWriter networkTypeConfigFile = new FileWriter("networkType.txt");
+            networkTypeConfigFile.write(networkType);
+            networkTypeConfigFile.write("\n");
+            networkTypeConfigFile.close();
+            System.out.println("Successfully wrote network type to the file.");
         } catch (IOException e) {
-            System.out.println("An error occurred. The networkType was not logged.");
+            System.out.println("An error occurred. The network type was not logged.");
+            e.printStackTrace();
+        }
+    }
+
+    public static void logModeTypeInFile(String modeType) {
+        try {
+            FileWriter modeTypeConfigFile = new FileWriter("mode.txt");
+            modeTypeConfigFile.write(modeType);
+            modeTypeConfigFile.write("\n");
+            modeTypeConfigFile.close();
+            System.out.println("Successfully wrote mode type to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred. The mode type was not logged.");
             e.printStackTrace();
         }
     }
