@@ -27,10 +27,16 @@ public class udpClient
             userNetworkInput = networkInput.nextLine();
         }
 
+        Scanner serverIpInput = new Scanner(System.in);
+        System.out.println("Please enter the servers ip address: ");
+        String serverIpStringRepresentation = serverIpInput.nextLine();
+
+
         InetAddress serverIp;
         if(userNetworkInput.equals("truman")) {
                 //myIp = InetAddress.getByName(GetPublicIp());
-            serverIp = InetAddress.getByName("150.243.227.218"); //This is the manual server ip
+            //serverIp = InetAddress.getByName("150.243.227.218"); //This is the manual server ip
+            serverIp = InetAddress.getByName(serverIpStringRepresentation);
 
         } else {
             serverIp = InetAddress.getLocalHost();

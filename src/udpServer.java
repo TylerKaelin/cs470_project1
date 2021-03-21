@@ -1,10 +1,9 @@
 // Tyler Kaelin and Logan Morris
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Timer;
@@ -24,6 +23,9 @@ public class udpServer
 
 //        String[] allIps = getAllIpsInIpConfig().clone();
         initiateAllNodeAvailibility(socketToTransmitData);
+
+        InetAddress serverIp = InetAddress.getByName(GetPublicIp());
+        System.out.println("Servers Ip: " + serverIp);
 
 
         while (true)
@@ -215,6 +217,25 @@ public class udpServer
             e.printStackTrace();
             return allAvailibleIps;
         }
+    }
+
+    public static String GetPublicIp()
+    {
+        String publicIpAddress = "";
+        try
+        {
+            URL urlName = new URL("http://bot.whatismyipaddress.com");
+
+            BufferedReader sc = new BufferedReader(new InputStreamReader(urlName.openStream()));
+
+            publicIpAddress = sc.readLine().trim();
+        }
+        catch (Exception e)
+        {
+            publicIpAddress = "Cannot Execute Properly";
+        }
+
+        return publicIpAddress;
     }
 
     public static void initiateAllNodeAvailibility(DatagramSocket socketToTransmitData) {
