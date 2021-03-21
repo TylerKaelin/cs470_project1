@@ -48,6 +48,10 @@ public class udpClient
             logNetworkTypeInFile(userNetworkInput);
         }
 
+        InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
+
+        System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
+
         Scanner serverIpInput = new Scanner(System.in);
         System.out.println("To get the servers Ip to connect to you must tell the server \"yes\" you have input in the mode type. Please enter the servers ip address: ");
         String serverIpStringRepresentation = serverIpInput.nextLine();
@@ -82,9 +86,9 @@ public class udpClient
 //            logModeTypeInFile(modeTypeStringRepresentation);
 //        }
 
-        InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
-
-        System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
+//        InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
+//
+//        System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
 
         initiateAutomaticNodeAvailibility(serverIp, socketToTransmitData, nodeSpecificIp); // Does heart beat
         initiateUdpServerPackageCheck();
