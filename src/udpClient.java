@@ -275,6 +275,8 @@ public class udpClient
         final int FIVESECONDSINMILLISECONDS = 5000;
         Timer t = new Timer();
 
+        DatagramSocket socket = createSocket();
+
         //final String messageBeforeByteConversion = myIp.toString();
 
 
@@ -286,7 +288,7 @@ public class udpClient
 
                         try {
 
-                            Thread t2 = new Thread(new udpClientCheckForPackets());
+                            Thread t2 = new Thread(new udpClientCheckForPackets(socket));
                             t2.start();
                             //System.out.println("Checking for packets");
 
@@ -314,6 +316,24 @@ public class udpClient
             e.printStackTrace();
         }
 
+    }
+
+    public static DatagramSocket createSocket() {
+        DatagramSocket socketToTransmitData = null;
+        try {
+            if(isModeTypeInFile("client server")) {
+                socketToTransmitData = new DatagramSocket(1235);
+                System.out.println("Socket on 1235 for client server");
+            } else {
+                socketToTransmitData = new DatagramSocket(1234);
+                System.out.println("Socket on 1234 for peer to peer");
+            }
+            System.out.println("Successfully created socket.");
+            return socketToTransmitData;
+        } catch(Exception e) {
+
+        }
+        return socketToTransmitData;
     }
 
     public static void createModeFile() {

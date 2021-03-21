@@ -5,39 +5,75 @@ import java.util.Scanner;
 
 public class udpClientCheckForPackets implements Runnable {
 
-    public DatagramSocket createSocket() {
-        DatagramSocket socketToTransmitData = null;
-        try {
-            if(isModeTypeInFile("client server")) {
-                socketToTransmitData = new DatagramSocket(1235);
-            } else {
-                socketToTransmitData = new DatagramSocket(1234);
-            }
-            System.out.println("Successfully created socket.");
-            System.out.println("Socket is: " + socketToTransmitData);
-            return socketToTransmitData;
-        } catch(Exception e) {
-            return  socketToTransmitData;
-        }
+    DatagramSocket socketToTransmitData;
+
+    udpClientCheckForPackets(DatagramSocket socket) {
+        socketToTransmitData = socket;
     }
+
+//    public DatagramSocket createSocket() {
+//            DatagramSocket socketToTransmitData = null;
+//            try {
+//                if(isModeTypeInFile("client server")) {
+//                    socketToTransmitData = new DatagramSocket(1235);
+//                    System.out.println("Socket on 1235 for client server");
+//                } else {
+//                    socketToTransmitData = new DatagramSocket(1234);
+//                    System.out.println("Socket on 1234 for peer to peer");
+//                }
+//                System.out.println("Successfully created socket.");
+//                return socketToTransmitData;
+//            } catch(Exception e) {
+//
+//            }
+//            return socketToTransmitData;
+//        }
+//        DatagramSocket socketToTransmitData = null;
+//        try {
+//            if(isModeTypeInFile("client server")) {
+//                socketToTransmitData = new DatagramSocket(1235);
+//            } else {
+//                socketToTransmitData = new DatagramSocket(1234);
+//            }
+//            System.out.println("Successfully created socket.");
+//            System.out.println("Socket is: " + socketToTransmitData.getPort());
+//            return socketToTransmitData;
+//        } catch(Exception e) {
+//            return  socketToTransmitData;
+//        }
+
+
+//    DatagramSocket socketToTransmitData = null;
 
     @Override
     public void run() {
+
 
         byte[] byteRepresentationOfMessage = new byte[65535];
 
         String stringRepresentationOfEachMessage = "";
         DatagramPacket packetToRecieve;
 
+//        System.out.println("before boolean " + alreadyExecuted);
+//
+//        if(!alreadyExecuted) {
+//            socketToTransmitData = createSocket();
+//            System.out.println("executed creation of socket");
+//            alreadyExecuted = true;
+//        }
+//
+//        System.out.println(" after boolean " + alreadyExecuted);
+
+
         while (true)
         {
             packetToRecieve = new DatagramPacket(byteRepresentationOfMessage, byteRepresentationOfMessage.length);
 
             try {
-                createSocket().receive(packetToRecieve);
+                socketToTransmitData.receive(packetToRecieve);
                 System.out.println("Success in creating socket to recieve data");
             } catch(Exception e) {
-
+                System.out.println("error" + e);
             }
 
             stringRepresentationOfEachMessage = convertByteMessageToString(byteRepresentationOfMessage).toString();
