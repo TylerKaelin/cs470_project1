@@ -288,7 +288,7 @@ public class udpClient
 
                             Thread t2 = new Thread(new udpClientCheckForPackets());
                             t2.start();
-                            System.out.println("Checking for packets");
+                            //System.out.println("Checking for packets");
 
                         } catch(Exception ie) {
 

@@ -14,6 +14,7 @@ public class udpClientCheckForPackets implements Runnable {
                 socketToTransmitData = new DatagramSocket(1234);
             }
             System.out.println("Successfully created socket.");
+            System.out.println("Socket is: " + socketToTransmitData);
             return socketToTransmitData;
         } catch(Exception e) {
             return  socketToTransmitData;
