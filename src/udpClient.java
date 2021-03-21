@@ -48,6 +48,8 @@ public class udpClient
             logNetworkTypeInFile(userNetworkInput);
         }
 
+        initiateUdpServerPackageCheck();
+
         InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
 
         System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
@@ -91,7 +93,7 @@ public class udpClient
 //        System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
 
         initiateAutomaticNodeAvailibility(serverIp, socketToTransmitData, nodeSpecificIp); // Does heart beat
-        initiateUdpServerPackageCheck();
+//        initiateUdpServerPackageCheck();
 
 
         byte[] closingConnectionMessageToBeSent;
