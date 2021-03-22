@@ -37,29 +37,19 @@ public class udpServerNoteAvailibility implements Runnable {
     public void run() {
 
         try {
-            System.out.println("Sent availible nodes to Ip: " + getIpAddress() + ", List of Availible Nodes: " + getMessage());
-
 
             InetAddress myIp;
             if(whatIsNetworkType().equals("truman")) {
                 myIp = InetAddress.getByName(getIpAddress().substring(1));
-                System.out.println("the substring of supposed ip" + getIpAddress().substring(1));
             } else {
                 myIp = InetAddress.getLocalHost();
             }
-
-            System.out.println("Prior to socet creation");
-            System.out.println("After socket creation");
-
-//            InetAddress eachNodeIpObject = InetAddress.getByName();
-//            System.out.println("After Inet stuff");
-//            System.out.println("indv ip: " + eachNodeIpObject);
 
             byte[] eachNodeIpInBytes = message.getBytes();
 
             DatagramPacket DpSend = new DatagramPacket(eachNodeIpInBytes, eachNodeIpInBytes.length, myIp, 1235);
             getSocketToTransmitData().send(DpSend);
-            System.out.println("After sent");
+            System.out.println("Sent message to: " + getIpAddress());
 
         } catch(Exception e) {
 

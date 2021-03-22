@@ -1,1 +1,1 @@
-peer to peer
+client server

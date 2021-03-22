@@ -17,6 +17,7 @@ public class udpClient
         createNetworkTypeFile();
         createModeFile();
 
+        System.out.println(); //Just for spacing
         System.out.println("MAKE SURE YOU HAVE STARTED THE SERVER FIRST!!");
 
         Scanner modeInput = new Scanner(System.in);
