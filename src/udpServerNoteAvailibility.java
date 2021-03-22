@@ -1,11 +1,8 @@
-import javax.xml.crypto.Data;
-import java.io.BufferedReader;
+//Tyler Kaelin and Logan Morris
 import java.io.File;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
-import java.net.URL;
 import java.util.Scanner;
 
 
@@ -56,24 +53,6 @@ public class udpServerNoteAvailibility implements Runnable {
         }
     }
 
-    public static String GetPublicIp()
-    {
-        String publicIpAddress = "";
-        try
-        {
-            URL urlName = new URL("http://bot.whatismyipaddress.com");
-
-            BufferedReader sc = new BufferedReader(new InputStreamReader(urlName.openStream()));
-
-            publicIpAddress = sc.readLine().trim();
-        }
-        catch (Exception e)
-        {
-            publicIpAddress = "Cannot Execute Properly";
-        }
-
-        return publicIpAddress;
-    }
 
     public static String whatIsNetworkType() {
         String eachNetworkType = "";
@@ -85,7 +64,6 @@ public class udpServerNoteAvailibility implements Runnable {
             while (myReader.hasNextLine()) {
                 eachNetworkType = myReader.nextLine();
                 return eachNetworkType;
-
 
             }
 

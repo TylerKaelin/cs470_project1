@@ -53,6 +53,7 @@ public class udpClient
 
         InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
 
+        System.out.println(); // Spacing
         System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
 
         Scanner serverIpInput = new Scanner(System.in);
@@ -62,39 +63,14 @@ public class udpClient
 
         InetAddress serverIp;
         if(userNetworkInput.equals("truman")) {
-                //myIp = InetAddress.getByName(GetPublicIp());
-            //serverIp = InetAddress.getByName("150.243.227.218"); //This is the manual server ip
             serverIp = InetAddress.getByName(serverIpStringRepresentation);
 
         } else {
             serverIp = InetAddress.getLocalHost();
         }
 
-//        Scanner modeInput = new Scanner(System.in);
-//        System.out.println("Please enter the mode type as either \"peer to peer\" or \"client server\": ");
-//        String modeTypeStringRepresentation = modeInput.nextLine();
-//
-//        while(!modeTypeStringRepresentation.toLowerCase().equals("peer to peer") && !modeTypeStringRepresentation.toLowerCase().equals("client server"))
-//        {
-//            System.out.println("Please enter the mode type as either \"peer to peer\" or \"client server\": ");
-//            modeTypeStringRepresentation = modeInput.nextLine();
-//        }
-
-
-//        if(!isNetworkTypeInFile(userNetworkInput)) {
-//            logNetworkTypeInFile(userNetworkInput);
-//        }
-
-//        if(!isModeTypeInFile(modeTypeStringRepresentation)) {
-//            logModeTypeInFile(modeTypeStringRepresentation);
-//        }
-
-//        InetAddress nodeSpecificIp = InetAddress.getByName(GetPublicIp());
-//
-//        System.out.println("Current Node Ip: " + nodeSpecificIp); // Mainly for peer to peer mode
 
         initiateAutomaticNodeAvailibility(serverIp, socketToTransmitData, nodeSpecificIp); // Does heart beat
-//        initiateUdpServerPackageCheck();
 
 
         byte[] closingConnectionMessageToBeSent;
@@ -126,7 +102,7 @@ public class udpClient
 
 
             } catch(Exception ie) {
-
+                System.out.println("Exception " + ie);
             }
 
         }
@@ -161,13 +137,12 @@ public class udpClient
         return randomNumber;
     }
 
-    public static void initiateAutomaticNodeAvailibility(InetAddress myIp, DatagramSocket socketToTransmitData, InetAddress tylersIp) {
+    public static void initiateAutomaticNodeAvailibility(InetAddress serverIp, DatagramSocket socketToTransmitData, InetAddress currentNodeIp) {
 
         final int ONESECONDINMILLISECONDS = 1000;
         Timer t = new Timer();
 
-        //final String messageBeforeByteConversion = myIp.toString();
-        final String messageBeforeByteConversion = tylersIp.toString();
+        final String messageBeforeByteConversion = currentNodeIp.toString();
         final byte[] availbilityMessageToBeSent = messageBeforeByteConversion.getBytes();
 
         t.schedule(
@@ -180,7 +155,7 @@ public class udpClient
                             System.out.println("System now sending availibility..");
 
 
-                            DatagramPacket DpSend = new DatagramPacket(availbilityMessageToBeSent, availbilityMessageToBeSent.length, myIp, 1234);
+                            DatagramPacket DpSend = new DatagramPacket(availbilityMessageToBeSent, availbilityMessageToBeSent.length, serverIp, 1234);
 
                             socketToTransmitData.send(DpSend);
 
@@ -199,86 +174,12 @@ public class udpClient
 
     }
 
-    public static StringBuilder convertByteMessageToString(byte[] clientMessageInByteRepresentation)
-    {
-        if (clientMessageInByteRepresentation == null) return null;
-
-        StringBuilder convertedStringRepresentationOfMessage = new StringBuilder();
-
-        int characterIndex = 0;
-
-        while (clientMessageInByteRepresentation[characterIndex] != 0)
-        {
-            convertedStringRepresentationOfMessage.append((char) clientMessageInByteRepresentation[characterIndex]);
-            characterIndex++;
-        }
-
-        return convertedStringRepresentationOfMessage;
-    }
-
-
-//    public static void initiateUdpServerPackageCheck(DatagramSocket socketToTransmitData) {
-//
-//        final int FIVESECONDSINMILLISECONDS = 5000;
-//        Timer t = new Timer();
-//
-//        //final String messageBeforeByteConversion = myIp.toString();
-//
-//
-//        t.schedule(
-//                new TimerTask()
-//                {
-//                    public void run()
-//                    {
-//
-//                        byte[] byteRepresentationOfMessage = new byte[65535];
-//                        try {
-//                            String stringRepresentationOfEachMessage;
-//                            DatagramPacket packetToRecieve;
-//
-//
-//                            System.out.println("Looking for data from Server");
-//
-//                            packetToRecieve = new DatagramPacket(byteRepresentationOfMessage, byteRepresentationOfMessage.length);
-//
-//                            socketToTransmitData.receive(packetToRecieve);
-//
-//                                // if ip is valid
-//                            stringRepresentationOfEachMessage = convertByteMessageToString(byteRepresentationOfMessage).toString();
-//
-//                            System.out.println("Server: " + stringRepresentationOfEachMessage);
-//
-//
-//                                // System.out.println("Client: " + convertByteMessageToString(byteRepresentationOfMessage));
-//
-//                            if (stringRepresentationOfEachMessage.toLowerCase().equals("close"))
-//                            {
-//                                System.out.println("Client has closed the connection. Closing Connection.");
-//                                System.exit(0);
-//                            }
-//
-//                            byteRepresentationOfMessage = new byte[65535];
-//
-//
-//                        } catch(Exception ie) {
-//
-//                        }
-//
-//                    }
-//                },
-//                0,
-//                FIVESECONDSINMILLISECONDS);
-//
-//    }
-
     public static void initiateUdpServerPackageCheck() {
 
         final int FIVESECONDSINMILLISECONDS = 5000;
         Timer t = new Timer();
 
         DatagramSocket socket = createSocket();
-
-        //final String messageBeforeByteConversion = myIp.toString();
 
 
         t.schedule(
@@ -291,7 +192,6 @@ public class udpClient
 
                             Thread t2 = new Thread(new udpClientCheckForPackets(socket));
                             t2.start();
-                            //System.out.println("Checking for packets");
 
                         } catch(Exception ie) {
 
@@ -322,12 +222,12 @@ public class udpClient
     public static DatagramSocket createSocket() {
         DatagramSocket socketToTransmitData = null;
         try {
+            // Socket on 1235 for client server
             if(isModeTypeInFile("client server")) {
                 socketToTransmitData = new DatagramSocket(1235);
-                System.out.println("Socket on 1235 for client server");
             } else {
+                // Socket on 1234 for peer to peer
                 socketToTransmitData = new DatagramSocket(1234);
-                System.out.println("Socket on 1234 for peer to peer");
             }
             System.out.println("Successfully created socket.");
             return socketToTransmitData;

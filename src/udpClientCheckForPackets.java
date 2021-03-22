@@ -14,39 +14,6 @@ public class udpClientCheckForPackets implements Runnable {
         socketToTransmitData = socket;
     }
 
-//    public DatagramSocket createSocket() {
-//            DatagramSocket socketToTransmitData = null;
-//            try {
-//                if(isModeTypeInFile("client server")) {
-//                    socketToTransmitData = new DatagramSocket(1235);
-//                    System.out.println("Socket on 1235 for client server");
-//                } else {
-//                    socketToTransmitData = new DatagramSocket(1234);
-//                    System.out.println("Socket on 1234 for peer to peer");
-//                }
-//                System.out.println("Successfully created socket.");
-//                return socketToTransmitData;
-//            } catch(Exception e) {
-//
-//            }
-//            return socketToTransmitData;
-//        }
-//        DatagramSocket socketToTransmitData = null;
-//        try {
-//            if(isModeTypeInFile("client server")) {
-//                socketToTransmitData = new DatagramSocket(1235);
-//            } else {
-//                socketToTransmitData = new DatagramSocket(1234);
-//            }
-//            System.out.println("Successfully created socket.");
-//            System.out.println("Socket is: " + socketToTransmitData.getPort());
-//            return socketToTransmitData;
-//        } catch(Exception e) {
-//            return  socketToTransmitData;
-//        }
-
-
-//    DatagramSocket socketToTransmitData = null;
 
     @Override
     public void run() {
@@ -57,16 +24,6 @@ public class udpClientCheckForPackets implements Runnable {
         String stringRepresentationOfEachMessage = "";
         DatagramPacket packetToRecieve;
 
-//        System.out.println("before boolean " + alreadyExecuted);
-//
-//        if(!alreadyExecuted) {
-//            socketToTransmitData = createSocket();
-//            System.out.println("executed creation of socket");
-//            alreadyExecuted = true;
-//        }
-//
-//        System.out.println(" after boolean " + alreadyExecuted);
-
 
         while (true)
         {
@@ -74,7 +31,6 @@ public class udpClientCheckForPackets implements Runnable {
 
             try {
                 socketToTransmitData.receive(packetToRecieve);
-                System.out.println("Success in creating socket to recieve data");
             } catch(Exception e) {
                 System.out.println("error" + e);
             }
@@ -84,8 +40,6 @@ public class udpClientCheckForPackets implements Runnable {
                 System.out.println("Server: " + stringRepresentationOfEachMessage);
             }
 
-
-            // System.out.println("Client: " + convertByteMessageToString(byteRepresentationOfMessage));
 
             if (stringRepresentationOfEachMessage.toLowerCase().equals("close"))
             {
@@ -125,42 +79,9 @@ public class udpClientCheckForPackets implements Runnable {
         return convertedStringRepresentationOfMessage;
     }
 
-    public static boolean isModeTypeInFile(String currentModeType) {
-        try {
-            File modeConfig = new File("mode.txt");
-            Scanner myReader = new Scanner(modeConfig);
-            boolean isModeTypeInConfig = false;
-
-            // While reading each IP address
-            while (myReader.hasNextLine()) {
-                String eachModeType = myReader.nextLine();
-
-                if(eachModeType.equals(currentModeType)) {
-                    //mode in config file
-                    isModeTypeInConfig = true;
-                    break;
-                }
-
-            }
-
-            if(isModeTypeInConfig) {
-                //System.out.println("The Mode Type is already in the config file");
-            } else {
-                //System.out.println("The Mode Type was not in the config file");
-            }
-
-            myReader.close();
-            return isModeTypeInConfig;
-        } catch (Exception e) {
-            System.out.println("An error occurred. The Ip existence in config file was not checked.");
-            e.printStackTrace();
-            return false;
-        }
-
-    }
 
     public static String[] getAllIpsInIpConfig() {
-        String[] allAvailibleIps = {}; //Assumes their will be no more than 100 nodes/clients, but can change to arraylist to fix
+        String[] allAvailibleIps = {};
 
         try {
             File IpConfigFile = new File("IpConfigFile.txt");
@@ -178,8 +99,6 @@ public class udpClientCheckForPackets implements Runnable {
             allAvailibleIps = new String[lineCount];
 
             Scanner newReader = new Scanner(IpConfigFile);
-
-            // System.out.println("Line count: " + lineCount);
 
 
             // Reading each IP address
@@ -213,10 +132,11 @@ public class udpClientCheckForPackets implements Runnable {
                         try {
                             String[] allIps = getAllIpsInIpConfig().clone();
 
-                            System.out.println("System sending all availible nodes..");
+                            System.out.println(); // Spacing
+                            System.out.println("New Server System sending all availible nodes..");
 
                             for(int indexForEachIp = 0; indexForEachIp < allIps.length; indexForEachIp++) {
-                                Thread t1 = new Thread(new udpServerNoteAvailibility(allIps[indexForEachIp], Arrays.toString(allIps), socketToTransmitData));
+                                Thread t1 = new Thread(new udpServerNoteAvailibility(allIps[indexForEachIp], "From new node server "+ Arrays.toString(allIps), socketToTransmitData));
                                 t1.run();
                             }
 

@@ -23,7 +23,6 @@ public class udpServer
         System.out.println(); //Spacing
 
 
-        //isModeTypeInFile(String currentModeType)
         Scanner modeDoneInput = new Scanner(System.in);
         System.out.println("Has the mode type been entered in the client? Please enter yes or no. If not start the client.");
         String modeInputString = modeDoneInput.nextLine();
@@ -33,18 +32,17 @@ public class udpServer
             modeInputString = modeDoneInput.nextLine();
         }
 
+        Scanner blankInput = new Scanner(System.in);
+        InetAddress serverIp = InetAddress.getByName(GetPublicIp());
+        System.out.println("Connect to Servers Ip (do not add the \"/\"): " + serverIp);
+        System.out.println("After connected, press enter.");
+        String enterCharacter = blankInput.nextLine(); // Waits for user to connect to server
+
         //if in client server mode then the server will send all nodes availibility
         if(isModeTypeInFile("client server")) {
             initiateAllNodeAvailibility(socketToTransmitData);
         }
 
-//        String[] allIps = getAllIpsInIpConfig().clone();
-        //initiateAllNodeAvailibility(socketToTransmitData);
-
-        InetAddress serverIp = InetAddress.getByName(GetPublicIp());
-        System.out.println("Connect to Servers Ip (do not add the \"/\"): " + serverIp);
-
-//        initiateAllNodeAvailibility(socketToTransmitData);
 
 
         while (true)
@@ -67,8 +65,6 @@ public class udpServer
                 System.out.println("Client: " + stringRepresentationOfEachMessage);
             }
 
-
-            // System.out.println("Client: " + convertByteMessageToString(byteRepresentationOfMessage));
 
             if (stringRepresentationOfEachMessage.toLowerCase().equals("close"))
             {
@@ -192,15 +188,17 @@ public class udpServer
 
         if (periodCount == 3) {
             System.out.println("Valid Ip, Node " + currentNodeIp + " alive.");
+            System.out.println(); // Spacing
             return true;
         }
 
         System.out.println("Non valid Ip, Node " + currentNodeIp + " alive.");
+        System.out.println(); // Spacing
         return false;
     }
 
     public static String[] getAllIpsInIpConfig() {
-    String[] allAvailibleIps = {}; //Assumes their will be no more than 100 nodes/clients, but can change to arraylist to fix
+    String[] allAvailibleIps = {};
 
     try {
         File IpConfigFile = new File("IpConfigFile.txt");
@@ -218,8 +216,6 @@ public class udpServer
         allAvailibleIps = new String[lineCount];
 
         Scanner newReader = new Scanner(IpConfigFile);
-
-        // System.out.println("Line count: " + lineCount);
 
 
         // Reading each IP address
@@ -312,6 +308,8 @@ public class udpServer
                                 t1.run();
                             }
 
+                            System.out.println(); // Spacing
+
                             Thread.sleep(10000); //Will wait 10 seconds before sending node availibility
 
                             System.out.println("System sending all availible nodes..");
@@ -321,6 +319,8 @@ public class udpServer
                                 t1.run();
                             }
 
+                            System.out.println(); // Spacing
+
                             Thread.sleep(10000); //Will wait 10 seconds before crashing
                             System.out.println("Server crash! Server down");
 
@@ -329,6 +329,8 @@ public class udpServer
                                 Thread t1 = new Thread(new udpServerNoteAvailibility(allIps[indexForEachIp], "server down", socketToTransmitData));
                                 t1.run();
                             }
+
+                            System.out.println(); // Spacing
 
                             Thread.sleep(60000); // Server will go down for 1 minute after it sends all availble nodes
 
